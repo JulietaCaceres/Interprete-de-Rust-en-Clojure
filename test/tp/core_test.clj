@@ -24,5 +24,13 @@
     (is (= true (compatibles? 'bool true)))
     (is (= true (compatibles? 'usize 1)))
     (is (= true (compatibles? 'char 'a)))
+    (is (= true (compatibles? 'char ['a])))
+    )
+  )
+
+(deftest pasar-a-int-test
+  (testing "Prueba de la funcion: pasar-a-int?"
+    (is (= 10 (pasar-a-int "10")))
+    (is (= "a" (pasar-a-int "a")))
     )
   )
