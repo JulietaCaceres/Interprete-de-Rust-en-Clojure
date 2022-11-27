@@ -49,3 +49,11 @@
     (is (= [10] (pasar-a-float [10])))
     )
   )
+
+(deftest palabra-reservada?-test
+  (testing "Prueba de la funcion: palabra-reservada?"
+    (is (= true  (palabra-reservada? 'while)))
+    (is (= false (palabra-reservada? 'until)))
+    (is (= false (palabra-reservada? 13)))
+    )
+  )

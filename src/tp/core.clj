@@ -1926,9 +1926,14 @@
 ; user=> (palabra-reservada? 13)
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn palabra-reservada?
-
+(defn palabra-reservada? [valor]
+  (let [palabras_reservadas (set #{'while 'as 'async 'await 'break 'const 'continue 'crate 'dyn 'else 'enum
+                                   'extern 'false 'fn 'for 'if 'impl 'in 'let 'loop 'match 'mod 'move 'mut 'pub 'ref
+                                   'return 'self 'static 'struct 'super 'trait 'true 'type 'union 'unsafe 'use 'where 'while
+                                   } )]
+    (contains? palabras_reservadas valor))
   )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; IDENTIFICADOR?: Recibe un elemento y devuelve true si es un identificador valido en Rust; si no, false.
