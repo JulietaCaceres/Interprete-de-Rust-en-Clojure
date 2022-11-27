@@ -2175,6 +2175,7 @@
 (defn pasar-a-int [value]
   (cond
     (string? value) (if (number? (read-string value)) (int (read-string value)) value)
+    (float? value) (int value)
     )
   )
 

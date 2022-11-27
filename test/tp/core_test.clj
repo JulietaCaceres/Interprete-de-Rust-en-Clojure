@@ -32,5 +32,6 @@
   (testing "Prueba de la funcion: pasar-a-int?"
     (is (= 10 (pasar-a-int "10")))
     (is (= "a" (pasar-a-int "a")))
+    (is (= 10 (pasar-a-int 10.0)))
     )
   )
