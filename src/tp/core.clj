@@ -2149,9 +2149,9 @@
   (cond
     (vector? clojureValue) true
     (= rustType 'i64) (if (int? clojureValue) true false)
+    (= rustType 'f64) (if (float? clojureValue) true false)
     )
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PASAR-A-INT: Recibe un elemento. Si puede devolverlo expresado como un entero, lo hace. Si no, lo devuelve intacto.
 ; Por ejemplo:
