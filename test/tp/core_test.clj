@@ -57,3 +57,12 @@
     (is (= false (palabra-reservada? 13)))
     )
   )
+
+(deftest identificador?-test
+  (testing "Prueba de la funcion: identificador?"
+    (is (= true  (identificador? 'boolean)))
+    (is (= false (identificador? 'bool)))
+    (is (= true (identificador? 'e120)))
+    (is (= false (identificador? '12e0)))
+    )
+  )

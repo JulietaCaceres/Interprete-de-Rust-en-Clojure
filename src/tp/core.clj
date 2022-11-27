@@ -1927,7 +1927,7 @@
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn palabra-reservada? [valor]
-  (let [palabras_reservadas (set #{'while 'as 'async 'await 'break 'const 'continue 'crate 'dyn 'else 'enum
+  (let [palabras_reservadas (set #{'while 'as 'async 'await 'bool 'break 'const 'continue 'crate 'dyn 'else 'enum
                                    'extern 'false 'fn 'for 'if 'impl 'in 'let 'loop 'match 'mod 'move 'mut 'pub 'ref
                                    'return 'self 'static 'struct 'super 'trait 'true 'type 'union 'unsafe 'use 'where 'while
                                    } )]
@@ -1947,8 +1947,8 @@
 ; user=> (identificador? '12e0)
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn identificador?
-
+(defn identificador? [value]
+  (and (not (palabra-reservada? value)) (symbol? value))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2156,12 +2156,12 @@
 (defn compatibles? [rustType clojureValue]
   (cond
     (vector? clojureValue) true
-    (= rustType 'i64) (if (int? clojureValue) true false)
-    (= rustType 'f64) (if (float? clojureValue) true false)
-    (= rustType 'String) (if (string? clojureValue) true false)
-    (= rustType 'bool) (if (boolean? clojureValue) true false)
-    (= rustType 'usize)  (if (and (int? clojureValue) (> clojureValue 0)) true false)
-    (= rustType 'char)  (if (char? (first (str clojureValue))) true false)
+    (= rustType 'i64) (int? clojureValue)
+    (= rustType 'f64) (float? clojureValue)
+    (= rustType 'String) (string? clojureValue)
+    (= rustType 'bool) (boolean? clojureValue)
+    (= rustType 'usize)  (and (int? clojureValue) (> clojureValue 0))
+    (= rustType 'char)  (char? (first (str clojureValue)))
     )
   )
 
