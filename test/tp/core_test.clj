@@ -35,5 +35,6 @@
     (is (= 10 (pasar-a-int 10.0)))
     (is (= 10 (pasar-a-int 10)))
     (is (= 'a (pasar-a-int 'a)))
+    (is (= [10.0] (pasar-a-int [10.0])))
     )
   )
