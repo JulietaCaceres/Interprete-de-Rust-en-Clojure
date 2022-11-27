@@ -2145,8 +2145,9 @@
 ; user=> (compatibles? 'char ['a])
 ; true
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn compatibles?
+(defn compatibles? [rustType clojureValue]
   (cond
+    (vector? clojureValue) true
     (= rustType 'i64) (if (int? clojureValue) true false)
     )
   )

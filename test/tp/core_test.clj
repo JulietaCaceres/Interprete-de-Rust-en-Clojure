@@ -16,5 +16,6 @@
   (testing "Prueba de la funcion: compatibles?"
     (is (= true (compatibles? 'i64 5)))
     (is (= false (compatibles? 'i64 5.0)))
+    (is (= true (compatibles? 'i64 [5.0])))
     )
   )
