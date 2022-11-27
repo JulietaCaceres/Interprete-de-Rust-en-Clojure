@@ -2150,6 +2150,7 @@
     (vector? clojureValue) true
     (= rustType 'i64) (if (int? clojureValue) true false)
     (= rustType 'f64) (if (float? clojureValue) true false)
+    (= rustType 'String) (if (string? clojureValue) true false)
     )
   )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
