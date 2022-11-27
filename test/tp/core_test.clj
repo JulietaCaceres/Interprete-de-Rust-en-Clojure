@@ -20,5 +20,7 @@
     (is (= true (compatibles? 'f64 5.0)))
     (is (= false (compatibles? 'f64 5)))
     (is (= true (compatibles? 'String "Hola")))
+    (is (= false (compatibles? 'bool "Hola")))
+    (is (= true (compatibles? 'bool true)))
     )
   )
