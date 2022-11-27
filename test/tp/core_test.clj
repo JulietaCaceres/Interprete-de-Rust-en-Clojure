@@ -22,5 +22,6 @@
     (is (= true (compatibles? 'String "Hola")))
     (is (= false (compatibles? 'bool "Hola")))
     (is (= true (compatibles? 'bool true)))
+    (is (= true (compatibles? 'usize 1)))
     )
   )

@@ -2152,6 +2152,7 @@
     (= rustType 'f64) (if (float? clojureValue) true false)
     (= rustType 'String) (if (string? clojureValue) true false)
     (= rustType 'bool) (if (boolean? clojureValue) true false)
+    (= rustType 'usize)  (if (and (int? clojureValue) (> clojureValue 0)) true false)
     )
   )
 
