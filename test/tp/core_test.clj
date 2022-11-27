@@ -10,4 +10,11 @@
     (is (= 0 (dividir 1 2)))
     (is (= 0.5 (dividir 1 2.0)))
     )
-  ))
+  )
+
+(deftest compatibles?-test
+  (testing "Prueba de la funcion: compatibles?"
+    (is (= true (compatibles? 'i64 5)))
+    (is (= false (compatibles? 'i64 5.0)))
+    )
+  )
