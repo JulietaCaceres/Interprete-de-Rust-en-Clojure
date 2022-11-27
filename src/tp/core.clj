@@ -2153,8 +2153,10 @@
     (= rustType 'String) (if (string? clojureValue) true false)
     (= rustType 'bool) (if (boolean? clojureValue) true false)
     (= rustType 'usize)  (if (and (int? clojureValue) (> clojureValue 0)) true false)
+    (= rustType 'char)  (if (char? (first (str clojureValue))) true false)
     )
   )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PASAR-A-INT: Recibe un elemento. Si puede devolverlo expresado como un entero, lo hace. Si no, lo devuelve intacto.

@@ -23,5 +23,6 @@
     (is (= false (compatibles? 'bool "Hola")))
     (is (= true (compatibles? 'bool true)))
     (is (= true (compatibles? 'usize 1)))
+    (is (= true (compatibles? 'char 'a)))
     )
   )
