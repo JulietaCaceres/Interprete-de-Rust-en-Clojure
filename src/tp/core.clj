@@ -2176,9 +2176,10 @@
   (cond
     (string? value) (if (number? (read-string value)) (int (read-string value)) value)
     (float? value) (int value)
-    (int? value) value
+    (or (int? value) (symbol? value))  value
     )
   )
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
