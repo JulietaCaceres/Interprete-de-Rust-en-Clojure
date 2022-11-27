@@ -2197,10 +2197,13 @@
 ; user=> (pasar-a-float [10])
 ; [10]
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn pasar-a-float
-
+(defn pasar-a-float [value]
+  (cond
+    (string? value) (if (number? (read-string value)) (float (read-string value)) value)
+    (int? value) (float value)
+    (or (float? value) (symbol? value) (vector? value))  value
+    )
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CARGAR-EN-ULT-REG: Recibe un vector de registros de activacion, una direccion, un tipo y un valor. Devuelve el
 ; vector de registros de activacion con el ultimo registro actualizado, en la direccion indicada, con el nuevo tipo

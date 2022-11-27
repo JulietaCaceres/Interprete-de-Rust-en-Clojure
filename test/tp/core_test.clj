@@ -38,3 +38,14 @@
     (is (= [10.0] (pasar-a-int [10.0])))
     )
   )
+
+(deftest pasar-a-float-test
+  (testing "Prueba de la funcion: pasar-a-float"
+    (is (= 10.0 (pasar-a-float "10")))
+    (is (= "a" (pasar-a-float "a")))
+    (is (= 10.0 (pasar-a-float 10)))
+    (is (= 10.0 (pasar-a-float 10.0)))
+    (is (= 'a (pasar-a-float 'a)))
+    (is (= [10] (pasar-a-float [10])))
+    )
+  )
