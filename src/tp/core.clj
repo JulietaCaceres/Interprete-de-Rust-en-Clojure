@@ -1897,8 +1897,11 @@
 ;
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn listar
-
+(defn add_enter [algo]
+  (if (or (= "{" algo) (= "}" algo)) (apply str (list "\n" algo "\n")) algo)
+  )
+(defn listar [tokens]
+  (println (map add_enter (map str tokens)))
   )
 
 
