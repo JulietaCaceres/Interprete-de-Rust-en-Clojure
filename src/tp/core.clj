@@ -1878,7 +1878,106 @@
       ADD (let [res (aplicar-operador-diadico + pila)]
             (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
 
-      )
+      ; PUSHFI: PUSH FROM INSTRUCTION. Direccionamiento inmediato. Incrementa cont-prg en 1 y agrega al final de pila el valor del argumento.
+      PUSHFI (recur cod regs-de-act (inc cont-prg) (conj pila (second fetched)) mapa-regs)
+
+      ; PUSHFM: PUSH FROM MEMORY. Direccionamiento directo. Incrementa cont-prg en 1 y agrega al final de pila el elemento ubicado en la posicion de reg-actual indicada por el valor del argumento.
+      PUSHFM (recur cod regs-de-act (inc cont-prg) (conj pila (second (reg-actual (second fetched)))) mapa-regs))
+
+      ; NOT: Incrementa cont-prg en 1, quita de la pila un elemento booleano, lo niega y lo coloca al final de la pila.
+      NOT (let [boolean-element (last pila)]
+            (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (not boolean-element)) mapa-regs)
+            )
+
+    ; NEG: Incrementa cont-prg en 1, quita de la pila un elemento numerico, le cambia el signo y lo coloca al final de la pila.
+      NEG (let [numero (last pila)]
+            (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (- numero)) mapa-regs)
+            )
+
+      ; TOI: Incrementa cont-prg en 1, quita de la pila un elemento numerico, lo convierte a entero y lo coloca al final de la pila.
+      TOI (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (pasar-a-int (last pila))) mapa-regs)
+
+      ; TOF: Incrementa cont-prg en 1, quita de la pila un elemento numerico, lo convierte a punto flotante y lo coloca al final de la pila.
+      TOF  (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (pasar-a-float (last pila))) mapa-regs)
+
+      ; EQ: Como ADD, pero calcula la operacion relacional = entre los dos valores.
+      EQ  (let [res (aplicar-operador-diadico = pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+      ; NEQ: Como ADD, pero calcula la operacion relacional != entre los dos valores.
+      NEQ (let [res (aplicar-operador-diadico not= pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; GT:  Como ADD, pero calcula la operacion relacional > entre los dos valores.
+      GT (let [res (aplicar-operador-diadico > pila)]
+           (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; GTE: Como ADD, pero calcula la operacion relacional >= entre los dos valores.
+      GTE (let [res (aplicar-operador-diadico >= pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; LT: Como ADD, pero calcula la operacion relacional < entre los dos valores.
+      LT (let [res (aplicar-operador-diadico < pila)]
+           (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; LTE: Como ADD, pero calcula la operacion relacional <= entre los dos valores.
+      LTE (let [res (aplicar-operador-diadico <= pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; MOD: Como ADD, pero calcula el resto de la division.
+      MOD (let [res (aplicar-operador-diadico rem pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; DIV: Como ADD, pero divide.
+      DIV (let [res (aplicar-operador-diadico dividir pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; MUL: Como ADD, pero multiplica.
+      MUL (let [res (aplicar-operador-diadico * pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; SUB: Como ADD, pero resta.
+      SUB (let [res (aplicar-operador-diadico - pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; OR: Como ADD, pero calcula el or entre los dos valores
+      OR (let [res (aplicar-operador-diadico or-diadico pila)]
+           (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; AND: Como ADD, pero calcula el and entre los dos valores.
+      AND (let [res (aplicar-operador-diadico and-diadico pila)]
+            (if (nil? res) res (recur cod regs-de-act (inc cont-prg) res mapa-regs)))
+
+      ; SQRT: Incrementa cont-prg en 1, quita de la pila un elemento numerico, calcula su raiz cuadrada y la coloca al final de la pila.
+      SQRT (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (Math/sqrt (last pila))) mapa-regs)
+
+      ; SIN: Incrementa cont-prg en 1, quita de la pila un elemento numerico, calcula su seno y lo coloca al final de la pila.
+      SIN (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (Math/sin (last pila))) mapa-regs)
+
+      ; ATAN: Incrementa cont-prg en 1, quita de la pila un elemento numerico, calcula su arcotangente y la coloca al final de la pila.
+      ATAN (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (Math/atan (last pila))) mapa-regs)
+
+      ; ABS: Incrementa cont-prg en 1, quita de la pila un elemento numerico, calcula su valor absoluto y lo coloca al final de la pila.
+      ABS (recur cod regs-de-act (inc cont-prg) (assoc pila (- (count pila) 1) (Math/abs (last pila))) mapa-regs)
+
+      ; FLUSH: Purga la salida e incrementa cont-prg en 1.
+      FLUSH (do (flush) (recur cod regs-de-act (inc cont-prg) pila mapa-regs))
+
+      ; NL: New line. Imprime un salto de linea e incrementa cont-prg en 1.
+      NL (do (println) (recur cod regs-de-act (inc cont-prg) pila mapa-regs))
+
+      ; JMP: Salto incondicional. Cambia cont-prg por el valor del argumento.
+      JMP (recur cod regs-de-act (second fetched) pila mapa-regs)
+
+      ; JC: Salto condicional. Quita el ultimo valor de la pila. Si este es true, cambia cont-prg por el valor del argumento. Si no, incrementa cont-prg en 1.
+      JC (let [ultimo (last pila),
+               next_conuevnt_prg (
+                               cond
+                               (true? ultimo) (second fetched)
+                               :else (inc cont-prg)
+                               )
+               ] (recur cod regs-de-act next_cont_prg (pop pila) mapa-regs)
+                 )
+
     )
   )
 
@@ -1912,9 +2011,14 @@
 ; user=> (agregar-ptocoma (list 'fn 'main (symbol "(") (symbol ")") (symbol "{") 'if 'x '< '0 (symbol "{") 'x '= '- 'x (symbol ";") (symbol "}") 'renglon '= 'x (symbol ";") 'if 'z '< '0 (symbol "{") 'z '= '- 'z (symbol ";") (symbol "}") (symbol "}") 'fn 'foo (symbol "(") (symbol ")") (symbol "{") 'if 'y '> '0 (symbol "{") 'y '= '- 'y (symbol ";") (symbol "}") 'else (symbol "{") 'x '= '- 'y (symbol ";") (symbol "}") (symbol "}")))
 ; (fn main ( ) { if x < 0 { x = - x ; } ; renglon = x ; if z < 0 { z = - z ; } } fn foo ( ) { if y > 0 { y = - y ; } else { x = - y ; } })
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn agregar-ptocoma
-
+(defn add-punto-coma [a b]
+  (if (and (= a (symbol "}")) (not (= b (symbol "}"))) (not (= b 'else)) (not (nil? b)))
+    (symbol (str a (symbol ";")))
+    a ))
+(defn agregar-ptocoma [tokens]
+  (map add-punto-coma tokens (concat (rest tokens) [nil]))
   )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PALABRA-RESERVADA?: Recibe un elemento y devuelve true si es una palabra reservada de Rust; si no, false.
@@ -1969,8 +2073,11 @@
 ; 0 nil
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn dump
+(defn instrucciones-numeradas [i instrucciones]
+  (println i instrucciones))
 
+(defn dump [instrucciones]
+  (map-indexed instrucciones-numeradas instrucciones )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1989,8 +2096,10 @@
 ; user=> (ya-declarado-localmente? 'Write [[0 2] [['io ['lib '()] 0] ['Write ['lib '()] 0] ['entero_a_hexa ['fn [(list ['n (symbol ":") 'i64]) 'String]] 2]]])
 ; false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn ya-declarado-localmente?
-
+(defn ya-declarado-localmente? [identificador contexto]
+  (let [posicion (last (first contexto))]
+    (let [identificadores (map first (subvec (second contexto) posicion))]
+      (not (nil? (some #(= identificador %) identificadores )))))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2006,8 +2115,36 @@
 ; [; (fn main ( ) { println! ( "{}" , TRES ) }) [use std :: io ; const TRES : i64 = 3] :sin-errores [[0] [[io [lib ()] 0] [TRES [const i64] 3]]] 0 [[CAL 0] HLT] []]
 ;                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn cargar-const-en-tabla
+(defn get-index [v value]
+  (first (first
+           (filter #(= (second %) value)
+             (map-indexed vector v))))
+  )
 
+(defn get-constant-definition [simb-ya-parseados]
+  (subvec simb-ya-parseados (get-index simb-ya-parseados 'const) (+ 6 (get-index simb-ya-parseados 'const)))
+  )
+
+(defn cargar-const-en-tabla [ambiente]
+  (let [
+        simb-actual (first ambiente),
+        simb-no-parseados-aun (get ambiente 1),
+        simb-ya-parseados (get ambiente 2),
+        estado (get ambiente 3),
+        contexto (get ambiente 4),
+        prox-var (get ambiente 5),
+        bytecode (get ambiente 6),
+        mapa-regs-de-act (get ambiente 7),
+        constant-definition (get-constant-definition simb-ya-parseados),
+        identificador (second constant-definition),
+        tipo (nth constant-definition 3),
+        valor (nth constant-definition 5),
+        terna [identificador tipo valor]]
+    (if (= estado :sin-errores)
+      [simb-actual  simb-no-parseados-aun  simb-ya-parseados  estado [(get contexto 0) (conj (get contexto 1) terna)]  prox-var  bytecode mapa-regs-de-act ]
+      ambiente
+      )
+    )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2022,8 +2159,21 @@
 ; [{ (let x : i64 = 10 ; println! ( "{}" , x ) }) [fn main ( )] :sin-errores [[0 1] [[main [fn [() ()]] 2]]] 0 [[CAL 2] HLT] []]
 ;                                                               ^^^^^^^^^^^^     ^  ^^^^^^^^^^^^^^^^^^^^^^^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn inicializar-contexto-local
-
+(defn inicializar-contexto-local [ambiente]
+  (let [
+        simb-actual (first ambiente),
+        simb-no-parseados-aun (get ambiente 1),
+        simb-ya-parseados (get ambiente 2),
+        estado (get ambiente 3),
+        contexto (get ambiente 4),
+        prox-var (get ambiente 5),
+        bytecode (get ambiente 6),
+        mapa-regs-de-act (get ambiente 7)]
+    (if (= estado :sin-errores)
+      [simb-actual  simb-no-parseados-aun  simb-ya-parseados  estado [(vec(concat (get contexto 0) [(count (get contexto 1))])) (get contexto 1) ]  prox-var  bytecode mapa-regs-de-act ]
+      ambiente
+      )
+    )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2038,10 +2188,23 @@
 ; [EOF () [fn main ( ) { let x : i64 = 10 ; let y : i64 = 20 ; println! ( "{}" , x + y ) }] :sin-errores [[0] [[main [fn [() ()]] 2]]] 2 [[CAL 2] HLT [PUSHFI 10] [POP 0] [PUSHFI 20] [POP 1] [PUSHFI "{}"] [PUSHFM 0] [PUSHFM 1] ADD [PUSHFI 2] OUT NL] [[2 [i64 nil] [i64 nil]]]]
 ;                                                                                           ^^^^^^^^^^^^  ^^^ ^^^^^^^^^^^^^^^^^^^^^^^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn restaurar-contexto-anterior
 
+(defn restaurar-contexto-anterior [ambiente]
+  (let [
+        simb-actual (first ambiente),
+        simb-no-parseados-aun (get ambiente 1),
+        simb-ya-parseados (get ambiente 2),
+        estado (get ambiente 3),
+        contexto (get ambiente 4),
+        prox-var (get ambiente 5),
+        bytecode (get ambiente 6),
+        mapa-regs-de-act (get ambiente 7)]
+    (if (= estado :sin-errores)
+      [simb-actual  simb-no-parseados-aun  simb-ya-parseados  estado [(vec(drop-last (get contexto 0))) (vec(subvec (get contexto 1) 0 (last (get contexto 0)))) ]  prox-var  bytecode mapa-regs-de-act ]
+      ambiente
+      )
+    )
   )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; BUSCAR-TIPO-DE-RETORNO: Recibe un ambiente y la direccion de una funcion a ser buscada en el segundo subvector del
 ; vector contexto. Si la encuentra, devuelve el tipo de dato de retorno de la funcion o la lista vacia si se trata de
@@ -2054,12 +2217,21 @@
 ; user=> (buscar-tipo-de-retorno [(symbol ";") (list 'println! (symbol "(") "La suma de 5 mas 7 es {}" (symbol ",") 'suma (symbol "(") 5 (symbol ",") 7 (symbol ")") (symbol ")") (symbol ";") (symbol "}")) ['fn 'suma (symbol "(") 'x (symbol ":") 'i64 (symbol ",") 'y (symbol ":") 'i64 (symbol ")") (symbol "->") 'i64 (symbol "{") 'x '+ 'y (symbol "}") 'fn 'main (symbol "(") (symbol ")") (symbol "{") 'suma (symbol "(") 5 (symbol ",") 7 (symbol ")")] :sin-errores [[0 2] [['suma ['fn [(list ['x (symbol ":") 'i64] ['y (symbol ":") 'i64]) 'i64]] 2] ['main ['fn [() ()]] 8]]] 0 [['CAL 8] 'HLT ['POPARG 1] ['POPARG 0] ['PUSHFM 0] ['PUSHFM 1] 'ADD 'RET ['PUSHFI 5] ['PUSHFI 7] ['CAL 2]] [[2 ['i64 nil] ['i64 nil]] [8]]] 1)
 ; nil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn buscar-tipo-de-retorno
+(defn get-return-type [v]
+  (let [rustTypes #{'i64 'f64 'String 'bool 'usize 'char}]
+    (if(not(empty?(intersection (set (flatten v)) rustTypes))) [(last v) (first(take-last 2 (flatten v )))] [(last v) ()])
+    ))
 
-  )
+(defn buscar-tipo-de-retorno [ambiente, direccion]
+  (let [sub-contexto (get (get ambiente 4) 1)]
+    (last(last(filter (fn [v] (= (first v) direccion)) (map get-return-type sub-contexto))))
+    ))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; GENERAR-REF: Recibe un ambiente y, si su estado no es :sin-errores, lo devuelve intacto.
+; [simb-actual  simb-no-parseados-aun  simb-ya-parseados  estado  contexto  prox-var  bytecode mapa-regs-de-act]
 ; De lo contrario, lo devuelve modificado, generando (llamando a generar) una instruccion PUSHADDR con la direccion
 ; de la ultima variable proveniente de simb-ya-parseados. Esta direccion sera la de la ultima coincidencia de la
 ; variable anterior en el segundo subvector del vector contexto.
@@ -2071,8 +2243,14 @@
 ; [) (; println! ( "{}" , v ) ; }) [fn inc ( v : & mut i64 ) { * v += 1 ; } fn main ( ) { let mut v : i64 = 5 ; inc ( & mut v] :sin-errores [[0 2] [[inc [fn [([v : & mut i64]) ()]] 2] [main [fn [() ()]] 6] [v [var-mut i64] 0]]] 1 [[CAL 6] HLT [POPARG 0] [PUSHFI 1] [POPADDREF 0] RETN [PUSHFI 5] [POP 0] [PUSHADDR 0]] [[2 [i64 nil]] [6 [i64 nil]]]]
 ;                                                                                                                           ^  ^^^^^^^^^^^^                                                                    ^^^^^^^^^^^^^^^^^                                                                               ^^^^^^^^^^^^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn generar-ref
-
+(defn generar-ref [ambiente]
+ (let [variable (last (simb-ya-parseados ambiente)),
+       context (contexto ambiente)]
+   (if (= (estado ambiente) :sin-errores)
+      (let [sub-contexto (get context 1),
+            direccion (last (last (filter (fn [v] (= (first v) variable)) sub-contexto)))]
+        ([(simb-actual ambiente) (simb-no-parseados-aun ambiente) (simb-ya-parseados ambiente) (estado ambiente) (contexto ambiente) (prox-var ambiente) (conj (bytecode ambiente) ['PUSHADDR direccion]) (mapa-regs-de-act ambiente)])
+      ambiente)))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2087,9 +2265,21 @@
 ; [{ (x = 20 ; } ; println! ( "{}" , x ) }) [fn main ( ) { let x : i64 ; if false { x = 10 ; } else] :sin-errores [[0 1 2] [[main [fn [() ()]] 2] [x [var-inmut i64] 0]]] 1 [[CAL 2] HLT [PUSHFI false] [JC 5] [JMP 8] [PUSHFI 10] [POP 0] [JMP ?]] [[2 [i64 nil]]]]
 ;                                                                                                    ^^^^^^^^^^^^                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^: tamano 8                                                                                                                                                                                                                                        ^ ubicacion de JMP ? en contexto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn fixup
-
+(defn fixup [ambiente ubicacion-jmp]
+  (if (= (estado ambiente) :sin-errores)
+    [(simb-actual ambiente)
+     (simb-no-parseados-aun ambiente)
+     (simb-ya-parseados ambiente)
+     (estado ambiente)
+     (contexto ambiente)
+     (prox-var ambiente)
+     (vec(concat  (conj (subvec (bytecode ambiente) 0 ubicacion-jmp) (vec[(get (get (bytecode ambiente) ubicacion-jmp) 0) (count (bytecode ambiente))])) (subvec (bytecode ambiente) ( + 1 ubicacion-jmp))))
+     (mapa-regs-de-act ambiente)]
+    ambiente
+    )
   )
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CONVERTIR-FORMATO-IMPRESION: Recibe una lista con los argumentos de print! de Rust y devuelve una lista con los
@@ -2104,9 +2294,19 @@
 ; user=> (convertir-formato-impresion '("Las raices cuadradas de {} son +{:.8} y -{:.8}" 4.0 1.999999999985448 1.999999999985448))
 ; ("Las raices cuadradas de %.0f son +%.8f y -%.8f" 4.0 1.999999999985448 1.999999999985448)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn convertir-formato-impresion
+(defn el-map [texto reemplazo]
+  (cond
+    (string? reemplazo) (clojure.string/replace texto #"\{" "%s")
+    (int? reemplazo) (clojure.string/replace texto #"\{" "%d")
+    (float? reemplazo) (clojure.string/replace texto #"\{:?(\.\d+)?" #(str "%" (if (nil? (last %1) ) ".0" (last %1)) "f"))
 
+    )
   )
+
+(defn convertir-formato-impresion [argumentos]
+  (apply str (map el-map (str2/split (first argumentos)  #"\}" ) (rest argumentos)))
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; DIVIDIR: Recibe dos numeros y devuelve su cociente, manteniendo su tipo.
@@ -2224,8 +2424,8 @@
 ; [[[String "2"] [i64 6] [i64 2] [i64 3] [i64 0]] [[f64 3] [i64 0]]]
 ;                                                   ^^^ ^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn cargar-en-ult-reg
-
+(defn cargar-en-ult-reg [regs dir tipo valor]
+  (assoc-in regs [(- (count regs) 1) dir] [tipo valor])
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2234,15 +2434,15 @@
 ; y el nuevo valor.
 ;
 ; Por ejemplo:
-; user=> (cargar-en-reg-dest [[['String "2"] ['i64 6] ['i64 2] ['i64 2] ['i64 2]] [['i64 6] ['i64 2] ['i64 [0 3]] ['i64 [0 4]] ['i64 2] ['i64 2]]] [0 4] 'i64 0)
+; user=> (cargar-en-reg-dest [ [['String "2"] ['i64 6] ['i64 2] ['i64 2] ['i64 2]][['i64 6] ['i64 2] ['i64 [0 3]] ['i64 [0 4]] ['i64 2] ['i64 2]]] [0 4] 'i64 0)
 ; [[[String "2"] [i64 6] [i64 2] [i64 2] [i64 0]] [[i64 6] [i64 2] [i64 [0 3]] [i64 [0 4]] [i64 2] [i64 2]]]
 ;                                         ^^^ ^
 ; user=> (cargar-en-reg-dest [[['String "2"] ['i64 6] ['i64 2] ['i64 2] ['i64 0]] [['i64 6] ['i64 2] ['i64 [0 3]] ['i64 [0 4]] ['i64 2] ['i64 2]]] [0 3] 'f64 3)
 ; [[[String "2"] [i64 6] [i64 2] [f64 3] [i64 0]] [[i64 6] [i64 2] [i64 [0 3]] [i64 [0 4]] [i64 2] [i64 2]]]
 ;                                 ^^^ ^
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn cargar-en-reg-dest
-
+(defn cargar-en-reg-dest [regs coords tipo valor]
+  (assoc-in regs coords [tipo valor])
   )
 
 true
